@@ -1,0 +1,170 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+
+import { createClient } from "@/lib/supabase/client";
+import { signupSchema, type SignupFormData } from "@/utils/validation";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+
+export default function SignupPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+  });
+
+  const onSubmit = async (data: SignupFormData) => {
+    setIsLoading(true);
+
+    try {
+      const supabase = createClient();
+
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            full_name: data.full_name,
+          },
+        },
+      });
+
+      if (error) {
+        if (error.message.includes("already registered")) {
+          toast.error("An account with this email already exists.");
+        } else {
+          toast.error(error.message);
+        }
+        return;
+      }
+
+      setEmailSent(true);
+      toast.success("Account created! Please check your email.");
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Success state
+  if (emailSent) {
+    return (
+      <div className="text-center py-4">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-8 w-8 text-green-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+        </div>
+        <h2 className="text-xl font-bold text-gray-900 mb-2">
+          Check your email
+        </h2>
+        <p className="text-sm text-gray-500 mb-6">
+          We sent a confirmation link to your email address. Click it to
+          activate your account.
+        </p>
+        <Link
+          href="/login"
+          className="text-blue-600 font-medium text-sm hover:underline"
+        >
+          Back to sign in
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Create an account</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Join ShopWave and start shopping today
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <Input
+          label="Full name"
+          type="text"
+          placeholder="John Doe"
+          autoComplete="name"
+          error={errors.full_name?.message}
+          {...register("full_name")}
+        />
+
+        <Input
+          label="Email address"
+          type="email"
+          placeholder="you@example.com"
+          autoComplete="email"
+          error={errors.email?.message}
+          {...register("email")}
+        />
+
+        <Input
+          label="Password"
+          showPasswordToggle
+          placeholder="Min. 6 characters"
+          autoComplete="new-password"
+          error={errors.password?.message}
+          {...register("password")}
+        />
+
+        <Input
+          label="Confirm password"
+          showPasswordToggle
+          placeholder="Repeat your password"
+          autoComplete="new-password"
+          error={errors.confirmPassword?.message}
+          {...register("confirmPassword")}
+        />
+
+        {/* Password requirements hint */}
+        <p className="text-xs text-gray-400">
+          Password must be at least 6 characters with one uppercase letter and
+          one number.
+        </p>
+
+        <Button
+          type="submit"
+          className="w-full mt-2"
+          size="lg"
+          isLoading={isLoading}
+        >
+          {isLoading ? "Creating account..." : "Create account"}
+        </Button>
+      </form>
+
+      <p className="text-center text-sm text-gray-500 mt-6">
+        Already have an account?{" "}
+        <Link
+          href="/login"
+          className="text-blue-600 font-medium hover:underline"
+        >
+          Sign in
+        </Link>
+      </p>
+    </>
+  );
+}
