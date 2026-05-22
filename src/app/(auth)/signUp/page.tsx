@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 import { signupSchema, type SignupFormData } from "@/utils/validation";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import Image from "next/image";
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +87,7 @@ export default function SignupPage() {
         </p>
         <Link
           href="/login"
-          className="text-blue-600 font-medium text-sm hover:underline"
+          className="text-orange-500 font-medium text-sm hover:underline"
         >
           Back to sign in
         </Link>
@@ -95,76 +96,107 @@ export default function SignupPage() {
   }
 
   return (
-    <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Create an account</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Join ShopWave and start shopping today
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-        <Input
-          label="Full name"
-          type="text"
-          placeholder="John Doe"
-          autoComplete="name"
-          error={errors.full_name?.message}
-          {...register("full_name")}
-        />
-
-        <Input
-          label="Email address"
-          type="email"
-          placeholder="you@example.com"
-          autoComplete="email"
-          error={errors.email?.message}
-          {...register("email")}
-        />
-
-        <Input
-          label="Password"
-          showPasswordToggle
-          placeholder="Min. 6 characters"
-          autoComplete="new-password"
-          error={errors.password?.message}
-          {...register("password")}
-        />
-
-        <Input
-          label="Confirm password"
-          showPasswordToggle
-          placeholder="Repeat your password"
-          autoComplete="new-password"
-          error={errors.confirmPassword?.message}
-          {...register("confirmPassword")}
-        />
-
-        {/* Password requirements hint */}
-        <p className="text-xs text-gray-400">
-          Password must be at least 6 characters with one uppercase letter and
-          one number.
-        </p>
-
-        <Button
-          type="submit"
-          className="w-full mt-2"
-          size="lg"
-          isLoading={isLoading}
-        >
-          {isLoading ? "Creating account..." : "Create account"}
-        </Button>
-      </form>
-
-      <p className="text-center text-sm text-gray-500 mt-6">
-        Already have an account?{" "}
+    <main>
+      <p className="text-right text-sm text-gray-500 mb-2">
+        Already have an account?
         <Link
           href="/login"
-          className="text-blue-600 font-medium hover:underline"
+          className="text-orange-500 font-medium hover:underline"
         >
-          Sign in
+          <Button variant="outline" size="sm" className="ml-2">
+            Sign in
+          </Button>
         </Link>
       </p>
-    </>
+      <div className="w-full flex flex-1 items-center justify-center px-4 py-8 gap-8 ">
+        <div className="flex-1 hidden md:block ">
+          <Image
+            src="/Digital-marketplace.png"
+            alt="Digital Marketplace"
+            width={700}
+            height={700}
+            priority
+            className="h-full w-full rounded-3xl object-cover"
+          />
+        </div>
+
+        <div>
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Create Your Account
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Join Tenhive and start shopping today!
+            </p>
+          </div>
+
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-4"
+            noValidate
+          >
+            <Input
+              label="Full name"
+              type="text"
+              placeholder="Enter Your Full Name"
+              autoComplete="name"
+              error={errors.full_name?.message}
+              {...register("full_name")}
+            />
+
+            <Input
+              label="Email address"
+              type="email"
+              placeholder="Enter Your Email address"
+              autoComplete="email"
+              error={errors.email?.message}
+              {...register("email")}
+            />
+
+            <Input
+              label="Password"
+              showPasswordToggle
+              placeholder="Min. 6 characters"
+              autoComplete="new-password"
+              error={errors.password?.message}
+              {...register("password")}
+            />
+
+            <Input
+              label="Confirm password"
+              showPasswordToggle
+              placeholder="Confirm your password"
+              autoComplete="new-password"
+              error={errors.confirmPassword?.message}
+              {...register("confirmPassword")}
+            />
+
+            <p className="text-xs text-gray-400">
+              Password must be at least 6 characters with one uppercase letter
+              and one number.
+            </p>
+
+            <Button
+              type="submit"
+              className="w-full mt-2"
+              size="lg"
+              isLoading={isLoading}
+            >
+              {isLoading ? "Creating account..." : "Create account"}
+            </Button>
+          </form>
+
+          <p className="text-center text-sm text-gray-500 mt-6">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="text-orange-500 font-medium hover:underline"
+            >
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </div>
+    </main>
   );
 }

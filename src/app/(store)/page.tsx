@@ -1,5 +1,3 @@
-// src/app/(store)/page.tsx
-
 import Link from "next/link";
 
 export default function HomePage() {
@@ -11,7 +9,7 @@ export default function HomePage() {
           New arrivals every week
         </span>
         <h1 className="text-5xl sm:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-          Shop smarter with <span className="text-blue-600">ShopWave</span>
+          Shop smarter with <span className="text-blue-600">Tenhive</span>
         </h1>
         <p className="text-lg text-gray-500 max-w-xl mx-auto mb-10">
           Discover thousands of products at unbeatable prices. Fast delivery,

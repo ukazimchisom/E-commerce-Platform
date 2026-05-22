@@ -7,8 +7,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "no name yet",
-    template: "%s | nowNameYet",
+    default: "Tenhive",
+    template: "%s | Tenhive",
   },
   description:
     "A modern full-stack e-commerce platform built with Next.js and Supabase.",
