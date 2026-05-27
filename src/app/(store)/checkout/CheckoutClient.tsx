@@ -1,0 +1,346 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { usePaystackPayment } from "react-paystack";
+
+import { useCheckout } from "@/hooks/useCheckout";
+import { useCart } from "@/hooks/useCart";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+
+export default function CheckoutClient() {
+  const router = useRouter();
+  const { items } = useCart();
+
+  const {
+    form,
+    totalPrice,
+    shippingCost,
+    grandTotal,
+    user,
+    isSavingOrder,
+    handlePaymentSuccess,
+    handlePaymentClose,
+  } = useCheckout();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = form;
+
+  const emailValue = watch("email");
+
+  const isRedirectingRef = useRef(false);
+
+  useEffect(() => {
+    if (items.length === 0 && !isRedirectingRef.current) {
+      router.replace("/cart");
+    }
+  }, [items, router]);
+
+  // Generate a unique payment reference
+  const paymentRef = useRef(
+    `SW-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
+  );
+
+  const paystackConfig = {
+    reference: paymentRef.current,
+    email: emailValue || user?.email || "",
+    amount: Math.round(grandTotal * 100),
+    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!,
+    currency: "NGN",
+    metadata: {
+      custom_fields: [
+        {
+          display_name: "Customer",
+          variable_name: "customer",
+          value: user?.email ?? "guest",
+        },
+      ],
+    },
+  };
+
+  const initializePayment = usePaystackPayment(paystackConfig);
+
+  const onSubmit = () => {
+    initializePayment({
+      onSuccess: (transaction: { reference: string }) => {
+        isRedirectingRef.current = true;
+        handlePaymentSuccess(transaction.reference);
+      },
+      onClose: handlePaymentClose,
+    });
+  };
+
+  if (items.length === 0) return null;
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      {/* Header */}
+      <div className="mb-8">
+        <Link
+          href="/cart"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          Back to cart
+        </Link>
+        <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
+        <p className="text-gray-500 mt-1">Complete your order below</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        {/* LEFT — Shipping Form */}
+        <div className="lg:col-span-2">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            {/* Contact info */}
+            <section className="bg-white border border-gray-100 rounded-2xl p-6 mb-5 shadow-sm">
+              <h2 className="text-base font-bold text-gray-900 mb-5 flex items-center gap-2">
+                <span className="w-6 h-6 bg-orange-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  1
+                </span>
+                Contact Information
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <Input
+                    label="Full name"
+                    placeholder="Your Full Name"
+                    error={errors.full_name?.message}
+                    {...register("full_name")}
+                  />
+                </div>
+                <Input
+                  label="Email address"
+                  type="email"
+                  placeholder="you@example.com"
+                  error={errors.email?.message}
+                  {...register("email")}
+                />
+                <Input
+                  label="Phone number"
+                  type="tel"
+                  placeholder="+1 234 567 8900"
+                  error={errors.phone?.message}
+                  {...register("phone")}
+                />
+              </div>
+            </section>
+
+            {/* Shipping address */}
+            <section className="bg-white border border-gray-100 rounded-2xl p-6 mb-5 shadow-sm">
+              <h2 className="text-base font-bold text-gray-900 mb-5 flex items-center gap-2">
+                <span className="w-6 h-6 bg-orange-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  2
+                </span>
+                Shipping Address
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <Input
+                    label="Street address"
+                    placeholder="45 Euphrates Street, Maitama District"
+                    error={errors.address?.message}
+                    {...register("address")}
+                  />
+                </div>
+                <Input
+                  label="City"
+                  placeholder="Abuja"
+                  error={errors.city?.message}
+                  {...register("city")}
+                />
+                <Input
+                  label="State / Province"
+                  placeholder="FCT"
+                  error={errors.state?.message}
+                  {...register("state")}
+                />
+                <Input
+                  label="ZIP / Postal code"
+                  placeholder="10001"
+                  error={errors.zip_code?.message}
+                  {...register("zip_code")}
+                />
+              </div>
+            </section>
+
+            {/* Payment section */}
+            <section className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+              <h2 className="text-base font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span className="w-6 h-6 bg-orange-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  3
+                </span>
+                Payment
+              </h2>
+              <p className="text-sm text-gray-500 mb-4">
+                Secured by Paystack. You&apos;ll be redirected to complete
+                payment.
+              </p>
+
+              <div className="flex items-start gap-3 p-3.5 bg-amber-50 border border-amber-200 rounded-xl mb-5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <div>
+                  <p className="text-sm font-semibold text-amber-800">
+                    Test Mode Active
+                  </p>
+                  <p className="text-xs text-amber-700 mt-0.5">
+                    Use test card: <strong>4084 0840 8408 4081</strong>{" "}
+                    &nbsp;|&nbsp; CVV: <strong>408</strong> &nbsp;|&nbsp;
+                    Expiry: any future date &nbsp;|&nbsp; PIN:{" "}
+                    <strong>0000</strong>
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 mb-6">
+                <span className="text-xs text-gray-400">We accept:</span>
+                {["Visa", "Mastercard", "Verve"].map((card) => (
+                  <span
+                    key={card}
+                    className="px-2.5 py-1 text-xs font-semibold text-gray-600 bg-gray-100 rounded border border-gray-200"
+                  >
+                    {card}
+                  </span>
+                ))}
+              </div>
+
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full"
+                isLoading={isSavingOrder}
+              >
+                {isSavingOrder ? (
+                  "Saving your order..."
+                ) : (
+                  <>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
+                    Pay #{grandTotal.toFixed(2)} securely
+                  </>
+                )}
+              </Button>
+            </section>
+          </form>
+        </div>
+
+        {/* RIGHT — Order Summary */}
+        <div className="lg:col-span-1">
+          <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm sticky top-24">
+            <h2 className="text-base font-bold text-gray-900 mb-5">
+              Order Summary
+            </h2>
+
+            <div className="space-y-3 mb-5 max-h-72 overflow-y-auto pr-1">
+              {items.map(({ product, quantity, unitPrice }) => (
+                <div key={product.id} className="flex gap-3">
+                  <div className="relative w-14 h-14 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
+                    <Image
+                      src={product.thumbnail}
+                      alt={product.title}
+                      fill
+                      className="object-cover"
+                    />
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-orange-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                      {quantity}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 line-clamp-2">
+                      {product.title}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      #{unitPrice} × {quantity}
+                    </p>
+                  </div>
+                  <p className="text-sm font-semibold text-gray-900 flex-shrink-0">
+                    #{(unitPrice * quantity).toFixed(2)}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="border-t border-gray-100 pt-4 space-y-2.5">
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Subtotal</span>
+                <span>#{totalPrice.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Shipping</span>
+                <span className={shippingCost === 0 ? "text-green-600" : ""}>
+                  {shippingCost === 0 ? "Free" : `#${shippingCost.toFixed(2)}`}
+                </span>
+              </div>
+              <div className="flex justify-between font-bold text-gray-900 text-base border-t border-gray-100 pt-3">
+                <span>Total</span>
+                <span>#{grandTotal.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="mt-5 flex items-center justify-center gap-1.5 text-xs text-gray-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
+              </svg>
+              SSL encrypted & secure
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

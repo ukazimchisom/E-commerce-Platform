@@ -99,7 +99,7 @@ export const useCartStore = create<CartStore>()(
       },
     }),
     {
-      name: "shopwave-cart", // localStorage key
+      name: "Tenhive-cart", // localStorage key
     },
   ),
 );
