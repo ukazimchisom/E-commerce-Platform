@@ -7,6 +7,7 @@ import { useProducts } from "@/hooks/useProduct";
 import { getDiscountedPrice } from "@/lib/api/products";
 import { formatCurrency } from "@/utils/format";
 import Button from "@/components/ui/Button";
+import { Plus, Search } from "lucide-react";
 
 export default function AdminProductsPage() {
   const { products, isLoading } = useProducts();
@@ -85,20 +86,7 @@ export default function AdminProductsPage() {
           </p>
         </div>
         <Button onClick={() => setShowForm((p) => !p)}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
+          <Plus className="h-4 w-4" strokeWidth={2} />
           {showForm ? "Cancel" : "Add Product"}
         </Button>
       </div>
@@ -196,20 +184,10 @@ export default function AdminProductsPage() {
 
       {/* Search */}
       <div className="relative max-w-sm">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
+        <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
+          strokeWidth={2}
+        />
         <input
           type="text"
           placeholder="Search products..."

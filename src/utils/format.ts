@@ -1,12 +1,14 @@
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-NG", {
     style: "currency",
     currency: "NGN",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(amount);
 }
 
 export function formatDate(dateString: string): string {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-NG", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -14,7 +16,7 @@ export function formatDate(dateString: string): string {
 }
 
 export function formatDateLong(dateString: string): string {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-NG", {
     year: "numeric",
     month: "long",
     day: "numeric",

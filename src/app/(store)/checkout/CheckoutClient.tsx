@@ -10,6 +10,7 @@ import { useCheckout } from "@/hooks/useCheckout";
 import { useCart } from "@/hooks/useCart";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { ChevronLeft, Lock, ShieldCheck, TriangleAlert } from "lucide-react";
 
 export default function CheckoutClient() {
   const router = useRouter();
@@ -87,20 +88,7 @@ export default function CheckoutClient() {
           href="/cart"
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-4"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <ChevronLeft className="h-4 w-4" strokeWidth={2} />
           Back to cart
         </Link>
         <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
@@ -199,18 +187,7 @@ export default function CheckoutClient() {
               </p>
 
               <div className="flex items-start gap-3 p-3.5 bg-amber-50 border border-amber-200 rounded-xl mb-5">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <TriangleAlert className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-semibold text-amber-800">
                     Test Mode Active
@@ -246,20 +223,7 @@ export default function CheckoutClient() {
                   "Saving your order..."
                 ) : (
                   <>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
+                    <Lock className="h-5 w-5" strokeWidth={2} />
                     Pay #{grandTotal.toFixed(2)} securely
                   </>
                 )}
@@ -322,20 +286,7 @@ export default function CheckoutClient() {
             </div>
 
             <div className="mt-5 flex items-center justify-center gap-1.5 text-xs text-gray-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-3.5 w-3.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                />
-              </svg>
+              <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2} />
               SSL encrypted & secure
             </div>
           </div>

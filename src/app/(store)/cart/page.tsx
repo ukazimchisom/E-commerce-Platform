@@ -5,7 +5,14 @@ import Link from "next/link";
 import { useCart } from "@/hooks/useCart";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
-import { ShoppingCart } from "lucide-react";
+import {
+  ArrowRight,
+  Lock,
+  Minus,
+  Plus,
+  ShoppingCart,
+  Trash2,
+} from "lucide-react";
 
 export default function CartPage() {
   const {
@@ -94,20 +101,7 @@ export default function CartPage() {
                     className="flex-shrink-0 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     aria-label="Remove item"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
+                    <Trash2 className="h-4 w-4" strokeWidth={2} />
                   </button>
                 </div>
 
@@ -119,20 +113,7 @@ export default function CartPage() {
                       className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
                       aria-label="Decrease quantity"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-3.5 w-3.5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M20 12H4"
-                        />
-                      </svg>
+                      <Minus className="h-3.5 w-3.5" strokeWidth={2} />
                     </button>
 
                     <span className="w-10 text-center text-sm font-semibold text-gray-900">
@@ -145,20 +126,7 @@ export default function CartPage() {
                       className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                       aria-label="Increase quantity"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-3.5 w-3.5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
+                      <Plus className="h-3.5 w-3.5" strokeWidth={2} />
                     </button>
                   </div>
 
@@ -236,20 +204,7 @@ export default function CartPage() {
             <Link href="/checkout">
               <Button size="lg" className="w-full">
                 Proceed to Checkout
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
-                </svg>
+                <ArrowRight className="h-4 w-4" strokeWidth={2} />
               </Button>
             </Link>
 
@@ -261,20 +216,7 @@ export default function CartPage() {
 
             {/* Trust note */}
             <p className="text-xs text-gray-400 text-center mt-4 flex items-center justify-center gap-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-3.5 w-3.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
+              <Lock className="h-3.5 w-3.5" strokeWidth={2} />
               Secure & encrypted checkout
             </p>
           </div>

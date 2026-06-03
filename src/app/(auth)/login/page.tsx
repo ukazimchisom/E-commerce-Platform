@@ -71,7 +71,7 @@ export default function LoginPage() {
         </Link>
       </p>
       <div className="w-full flex mb-8 items-center justify-center px-4 py-8 gap-8">
-        <div className="flex-1 hidden md:block border border-orange-200 rounded-3xl overflow-hidden">
+        <div className="flex-1 hidden md:block border border-orange-200 rounded-3xl overflow-hidden mb-8">
           <Image
             src="/login-image.png"
             alt="Login illustration"

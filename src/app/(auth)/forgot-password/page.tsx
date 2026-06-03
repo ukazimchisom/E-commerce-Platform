@@ -14,6 +14,7 @@ import {
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Image from "next/image";
+import { ChevronLeft, Mail } from "lucide-react";
 
 export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -55,20 +56,7 @@ export default function ForgotPasswordPage() {
     return (
       <div className="text-center py-4">
         <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8 text-blue-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            />
-          </svg>
+          <Mail className="h-8 w-8 text-blue-600" strokeWidth={2} />
         </div>
         <h2 className="text-xl font-bold text-gray-900 mb-2">Email sent!</h2>
         <p className="text-sm text-gray-500 mb-6">
@@ -77,7 +65,7 @@ export default function ForgotPasswordPage() {
         </p>
         <Link
           href="/login"
-          className="text-blue-600 font-medium text-sm hover:underline"
+          className="text-orange-500 font-medium text-sm hover:underline"
         >
           Back to sign in
         </Link>
@@ -103,20 +91,7 @@ export default function ForgotPasswordPage() {
             href="/login"
             className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-4"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
+            <ChevronLeft className="h-4 w-4" strokeWidth={2} />
             Back to sign in
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">Forgot password?</h1>
