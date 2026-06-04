@@ -46,10 +46,10 @@ export default function AdminOverviewPage() {
             .limit(6),
         ]);
 
-        const orders = ordersRes.data ?? [];
+        const orders: any[] = ordersRes.data ?? [];
         const revenue = orders
-          .filter((o) => o.payment_status === "paid")
-          .reduce((sum, o) => sum + o.total_amount, 0);
+          .filter((o: any) => o.payment_status === "paid")
+          .reduce((sum: number, o: any) => sum + o.total_amount, 0);
 
         setMetrics({
           totalUsers: usersRes.count ?? 0,
