@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import type { Profile } from "@/types/database";
 
-// ✅ Create once, outside the hook
 const supabase = createClient();
 
 interface UseUserReturn {
@@ -46,7 +45,7 @@ export function useUser(): UseUserReturn {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event: any, session: any) => {
       setUser(session?.user ?? null);
 
       if (session?.user) {
