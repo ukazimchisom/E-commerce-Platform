@@ -23,6 +23,7 @@ export default function CheckoutClient() {
     shippingCost,
     grandTotal,
     user,
+    isUserLoading,
     isSavingOrder,
     handlePaymentSuccess,
     handlePaymentClose,
@@ -101,38 +102,50 @@ export default function CheckoutClient() {
         <div className="lg:col-span-2">
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             {/* Contact info */}
+
             <section className="bg-white border border-gray-100 rounded-2xl p-6 mb-5 shadow-sm">
               <h2 className="text-base font-bold text-gray-900 mb-5 flex items-center gap-2">
-                <span className="w-6 h-6 bg-orange-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                <span className="w-6 h-6 bg-blue-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
                   1
                 </span>
                 Contact Information
               </h2>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="sm:col-span-2">
+              {isUserLoading ? (
+                // Skeleton while user data loads
+                <div className="space-y-4 animate-pulse">
+                  <div className="h-10 bg-gray-100 rounded-lg w-full" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="h-10 bg-gray-100 rounded-lg" />
+                    <div className="h-10 bg-gray-100 rounded-lg" />
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="sm:col-span-2">
+                    <Input
+                      label="Full name"
+                      placeholder="John Doe"
+                      error={errors.full_name?.message}
+                      {...register("full_name")}
+                    />
+                  </div>
                   <Input
-                    label="Full name"
-                    placeholder="Your Full Name"
-                    error={errors.full_name?.message}
-                    {...register("full_name")}
+                    label="Email address"
+                    type="email"
+                    placeholder="you@example.com"
+                    error={errors.email?.message}
+                    {...register("email")}
+                  />
+                  <Input
+                    label="Phone number"
+                    type="tel"
+                    placeholder="+1 234 567 8900"
+                    error={errors.phone?.message}
+                    {...register("phone")}
                   />
                 </div>
-                <Input
-                  label="Email address"
-                  type="email"
-                  placeholder="you@example.com"
-                  error={errors.email?.message}
-                  {...register("email")}
-                />
-                <Input
-                  label="Phone number"
-                  type="tel"
-                  placeholder="+1 234 567 8900"
-                  error={errors.phone?.message}
-                  {...register("phone")}
-                />
-              </div>
+              )}
             </section>
 
             {/* Shipping address */}
