@@ -11,11 +11,13 @@ import { useCart } from "@/hooks/useCart";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { ChevronLeft, Lock, ShieldCheck, TriangleAlert } from "lucide-react";
-import { formatCurrency } from "@/utils/format";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { formatNairaFromUsd, formatCurrency } from "@/utils/format";
 
 export default function CheckoutClient() {
   const router = useRouter();
   const { items } = useCart();
+  const { rate } = useExchangeRate();
 
   const {
     form,
@@ -238,7 +240,7 @@ export default function CheckoutClient() {
                 ) : (
                   <>
                     <Lock className="h-5 w-5" strokeWidth={2} />
-                    Pay {formatCurrency(grandTotal)} securely
+                    Pay {formatNairaFromUsd(grandTotal, rate)} securely
                   </>
                 )}
               </Button>
@@ -253,6 +255,7 @@ export default function CheckoutClient() {
               Order Summary
             </h2>
 
+            {/* Items list */}
             <div className="space-y-3 mb-5 max-h-72 overflow-y-auto pr-1">
               {items.map(({ product, quantity, unitPrice }) => (
                 <div key={product.id} className="flex gap-3">
@@ -261,7 +264,6 @@ export default function CheckoutClient() {
                       src={product.thumbnail}
                       alt={product.title}
                       fill
-                      sizes="56px"
                       className="object-cover"
                     />
                     <span className="absolute -top-1 -right-1 w-5 h-5 bg-orange-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
@@ -273,11 +275,11 @@ export default function CheckoutClient() {
                       {product.title}
                     </p>
                     <p className="text-xs text-gray-500 mt-0.5">
-                      {formatCurrency(unitPrice)} × {quantity}
+                      {formatNairaFromUsd(unitPrice, rate)} × {quantity}
                     </p>
                   </div>
                   <p className="text-sm font-semibold text-gray-900 flex-shrink-0">
-                    {formatCurrency(unitPrice * quantity)}
+                    {formatNairaFromUsd(unitPrice * quantity, rate)}
                   </p>
                 </div>
               ))}
@@ -286,7 +288,19 @@ export default function CheckoutClient() {
             <div className="border-t border-gray-100 pt-4 space-y-2.5">
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Subtotal</span>
-                <span>{formatCurrency(totalPrice)}</span>
+                <span>{formatNairaFromUsd(totalPrice, rate)}</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Shipping</span>
+                <span className={shippingCost === 0 ? "text-green-600" : ""}>
+                  {shippingCost === 0
+                    ? "Free"
+                    : formatNairaFromUsd(shippingCost, rate)}
+                </span>
+              </div>
+              <div className="flex justify-between font-bold text-gray-900 text-base border-t border-gray-100 pt-3">
+                <span>Total</span>
+                <span>{formatNairaFromUsd(grandTotal, rate)}</span>
               </div>
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Shipping</span>

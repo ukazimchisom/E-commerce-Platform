@@ -6,6 +6,7 @@ import type { Product } from "@/types/products";
 import { getDiscountedPrice } from "@/lib/api/products";
 import StarRating from "./StarRating";
 import { formatCurrency } from "@/utils/format";
+import PriceDisplay from "./PriceDisplay";
 
 interface ProductCardProps {
   product: Product;
@@ -65,16 +66,17 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         <div className="flex items-center justify-between mt-3">
           <div className="flex flex-col">
-            <span className="text-base font-bold text-gray-900">
-              {formatCurrency(discountedPrice)}
-            </span>
+            <PriceDisplay
+              usdAmount={discountedPrice}
+              size="sm"
+              showUsd={false}
+            />
             {hasDiscount && (
               <span className="text-xs text-gray-400 line-through">
                 {formatCurrency(product.price)}
               </span>
             )}
           </div>
-
           <span className="px-3 py-1.5 text-xs font-semibold text-orange-600 bg-orange-100 rounded-lg group-hover:bg-orange-600 group-hover:text-white transition-colors">
             View
           </span>

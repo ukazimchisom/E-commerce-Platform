@@ -28,3 +28,29 @@ export function formatDateLong(dateString: string): string {
 export function truncateId(id: string): string {
   return id.slice(0, 8).toUpperCase();
 }
+
+export function formatNaira(amount: number): string {
+  return new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+export function convertToNaira(
+  usdAmount: number,
+  rate: number | null,
+): number | null {
+  if (rate === null) return null;
+  return usdAmount * rate;
+}
+
+export function formatNairaFromUsd(
+  usdAmount: number,
+  rate: number | null,
+): string {
+  const naira = convertToNaira(usdAmount, rate);
+  if (naira === null) return "...";
+  return formatNaira(naira);
+}

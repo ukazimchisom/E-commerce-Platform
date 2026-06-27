@@ -12,12 +12,15 @@ import Badge, {
   getPaymentStatusVariant,
 } from "@/components/ui/Badge";
 import type { OrderWithItems } from "@/types/database";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { formatNairaFromUsd } from "@/utils/format";
 
 export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<OrderWithItems | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { rate } = useExchangeRate();
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -131,8 +134,8 @@ export default function OrderDetailPage() {
                 <p className="text-sm font-semibold text-gray-900 line-clamp-2">
                   {item.product_title}
                 </p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {formatCurrency(item.unit_price)} × {item.quantity}
+                <p className="text-sm font-bold text-gray-900 flex-shrink-0">
+                  {formatNairaFromUsd(item.unit_price * item.quantity, rate)}
                 </p>
               </div>
               <p className="text-sm font-bold text-gray-900 flex-shrink-0">
@@ -151,7 +154,7 @@ export default function OrderDetailPage() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between text-gray-600">
               <span>Subtotal</span>
-              <span>{formatCurrency(order.total_amount)}</span>
+              <span>{formatNairaFromUsd(order.total_amount, rate)}</span>
             </div>
             <div className="flex justify-between text-gray-600">
               <span>Shipping</span>
@@ -159,7 +162,7 @@ export default function OrderDetailPage() {
             </div>
             <div className="flex justify-between font-bold text-gray-900 text-base border-t border-gray-100 pt-2 mt-2">
               <span>Total</span>
-              <span>{formatCurrency(order.total_amount)}</span>
+              <span>{formatNairaFromUsd(order.total_amount, rate)}</span>
             </div>
           </div>
 

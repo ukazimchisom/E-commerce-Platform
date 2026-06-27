@@ -10,6 +10,8 @@ import Badge, {
 } from "@/components/ui/Badge";
 import type { OrderStatus } from "@/types/database";
 import { Search } from "lucide-react";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { formatNairaFromUsd } from "@/utils/format";
 
 interface AdminOrder {
   id: string;
@@ -36,6 +38,7 @@ export default function AdminOrdersPage() {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const { rate } = useExchangeRate();
 
   const fetchOrders = async () => {
     try {
@@ -201,8 +204,8 @@ export default function AdminOrdersPage() {
                     <td className="px-5 py-4 text-gray-500 text-xs text-center">
                       {order.order_items?.length ?? 0}
                     </td>
-                    <td className="px-5 py-4 text-gray-800 font-medium text-xs whitespace-nowrap">
-                      {formatCurrency(order.total_amount)}
+                    <td className="px-5 py-4 text-gray-300 font-medium text-xs whitespace-nowrap">
+                      {formatNairaFromUsd(order.total_amount, rate)}
                     </td>
                     <td className="px-5 py-4">
                       <Badge

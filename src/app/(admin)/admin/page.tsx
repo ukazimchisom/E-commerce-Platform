@@ -6,6 +6,8 @@ import { formatCurrency } from "@/utils/format";
 import Badge, { getOrderStatusVariant } from "@/components/ui/Badge";
 import { formatDate, truncateId } from "@/utils/format";
 import Link from "next/link";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { formatNairaFromUsd } from "@/utils/format";
 
 interface Metrics {
   totalUsers: number;
@@ -26,6 +28,7 @@ export default function AdminOverviewPage() {
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { rate } = useExchangeRate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,7 +87,7 @@ export default function AdminOverviewPage() {
     },
     {
       label: "Revenue",
-      value: metrics ? formatCurrency(metrics.totalRevenue) : "—",
+      value: metrics ? formatNairaFromUsd(metrics.totalRevenue, rate) : "—",
       color: "from-green-500 to-green-600",
       href: "/admin/orders",
     },
@@ -189,8 +192,8 @@ export default function AdminOverviewPage() {
                         variant={getOrderStatusVariant(order.status)}
                       />
                     </td>
-                    <td className="px-6 py-3 text-gray-800 font-medium">
-                      {formatCurrency(order.total_amount)}
+                    <td className="px-6 py-3 text-gray-300 font-medium">
+                      {formatNairaFromUsd(order.total_amount, rate)}
                     </td>
                     <td className="px-6 py-3 text-gray-800 text-xs">
                       {formatDate(order.created_at)}

@@ -7,6 +7,7 @@ import { getProductById, getDiscountedPrice } from "@/lib/api/products";
 import StarRating from "@/components/ui/StarRating";
 import AddToCartButton from "@/components/ui/AddToCartButton";
 import { formatCurrency } from "@/utils/format";
+import PriceDisplay from "@/components/ui/PriceDisplay";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -128,12 +129,10 @@ export default async function ProductDetailPage({ params }: Props) {
           </div>
 
           {/* Price */}
-          <div className="flex items-end gap-3 mb-2">
-            <span className="text-4xl font-extrabold text-gray-900">
-              {formatCurrency(discountedPrice)}
-            </span>
+          <div className="flex items-end gap-4 mb-2">
+            <PriceDisplay usdAmount={discountedPrice} size="lg" showUsd />
             {hasDiscount && (
-              <span className="text-xl text-gray-400 line-through mb-1">
+              <span className="text-xl text-gray-400 line-through mb-2">
                 {formatCurrency(product.price)}
               </span>
             )}
@@ -141,7 +140,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
           {hasDiscount && (
             <p className="text-sm text-green-600 font-medium mb-5">
-              You save {formatCurrency(savings)} (
+              You save {formatCurrency(parseFloat(savings))} (
               {Math.round(product.discountPercentage)}% off)
             </p>
           )}

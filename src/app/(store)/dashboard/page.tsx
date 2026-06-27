@@ -6,10 +6,13 @@ import { useOrders } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, truncateId } from "@/utils/format";
 import Badge, { getOrderStatusVariant } from "@/components/ui/Badge";
 import { ShoppingBag, RefreshCw, CheckCheck, Wallet } from "lucide-react";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { formatNairaFromUsd } from "@/utils/format";
 
 export default function DashboardPage() {
   const { profile } = useUser();
   const { orders, isLoading } = useOrders();
+  const { rate } = useExchangeRate();
 
   const totalSpent = orders
     .filter((o) => o.payment_status === "paid")
@@ -24,7 +27,7 @@ export default function DashboardPage() {
     },
     {
       label: "Total Spent",
-      value: isLoading ? "—" : formatCurrency(totalSpent),
+      value: isLoading ? "—" : formatNairaFromUsd(totalSpent, rate),
       icon: Wallet,
       color: "bg-emerald-100 text-emerald-700",
     },
@@ -191,8 +194,8 @@ export default function DashboardPage() {
                       {(order.order_items?.length ?? 0) !== 1 ? "s" : ""}
                     </span>
 
-                    <span className="font-bold text-gray-900">
-                      {formatCurrency(order.total_amount)}
+                    <span className="text-sm font-bold text-gray-900">
+                      {formatNairaFromUsd(order.total_amount, rate)}
                     </span>
                   </div>
                 </Link>

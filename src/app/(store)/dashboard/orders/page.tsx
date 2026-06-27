@@ -8,9 +8,12 @@ import Badge, {
   getPaymentStatusVariant,
 } from "@/components/ui/Badge";
 import EmptyState from "@/components/ui/EmptyState";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { formatNairaFromUsd } from "@/utils/format";
 
 export default function OrdersPage() {
   const { orders, isLoading, error, refetch } = useOrders();
+  const { rate } = useExchangeRate();
 
   if (isLoading) {
     return (
@@ -103,7 +106,7 @@ export default function OrdersPage() {
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <span className="text-base font-bold text-gray-900">
-                    {formatCurrency(order.total_amount)}
+                    {formatNairaFromUsd(order.total_amount, rate)}
                   </span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
