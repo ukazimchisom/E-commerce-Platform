@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useCart } from "@/hooks/useCart";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
+import PriceDisplay from "@/components/ui/PriceDisplay";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { formatNairaFromUsd, formatCurrency } from "@/utils/format";
 import {
   ArrowRight,
   Lock,
@@ -23,6 +26,8 @@ export default function CartPage() {
     updateQuantity,
     clearCart,
   } = useCart();
+
+  const { rate } = useExchangeRate();
 
   if (items.length === 0) {
     return (
@@ -132,11 +137,15 @@ export default function CartPage() {
                   </div>
 
                   <div className="text-right">
-                    <p className="text-base font-bold text-gray-900">
-                      ${(unitPrice * quantity).toFixed(2)}
-                    </p>
+                    <PriceDisplay
+                      usdAmount={unitPrice * quantity}
+                      size="sm"
+                      showUsd={false}
+                    />
                     {quantity > 1 && (
-                      <p className="text-xs text-gray-400">${unitPrice} each</p>
+                      <p className="text-xs text-gray-400">
+                        {formatNairaFromUsd(unitPrice, rate)} each
+                      </p>
                     )}
                   </div>
                 </div>
@@ -168,7 +177,7 @@ export default function CartPage() {
                     <span className="text-gray-400">×{quantity}</span>
                   </span>
                   <span className="font-medium text-gray-900 flex-shrink-0">
-                    ${(unitPrice * quantity).toFixed(2)}
+                    {formatNairaFromUsd(unitPrice * quantity, rate)}
                   </span>
                 </div>
               ))}
@@ -178,17 +187,18 @@ export default function CartPage() {
             <div className="border-t border-gray-100 pt-4 mb-4 space-y-2">
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Subtotal</span>
-                <span>${totalPrice.toFixed(2)}</span>
+                <span>{formatNairaFromUsd(totalPrice, rate)}</span>
               </div>
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Shipping</span>
-                <span className="text-green-600">
-                  {totalPrice >= 50 ? "Free" : "$4.99"}
+                <span className={totalPrice >= 50 ? "text-green-600" : ""}>
+                  {totalPrice >= 50 ? "Free" : formatNairaFromUsd(4.99, rate)}
                 </span>
               </div>
               {totalPrice < 50 && (
                 <p className="text-xs text-gray-400">
-                  Add ${(50 - totalPrice).toFixed(2)} more for free shipping
+                  Add {formatNairaFromUsd(50 - totalPrice, rate)} more for free
+                  shipping
                 </p>
               )}
             </div>
@@ -197,7 +207,10 @@ export default function CartPage() {
             <div className="flex justify-between font-bold text-gray-900 text-lg border-t border-gray-100 pt-4 mb-6">
               <span>Total</span>
               <span>
-                ${(totalPrice + (totalPrice >= 50 ? 0 : 4.99)).toFixed(2)}
+                {formatNairaFromUsd(
+                  totalPrice + (totalPrice >= 50 ? 0 : 4.99),
+                  rate,
+                )}
               </span>
             </div>
 
