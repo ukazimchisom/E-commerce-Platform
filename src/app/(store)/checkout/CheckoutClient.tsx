@@ -307,7 +307,7 @@ export default function CheckoutClient() {
                 <span className={shippingCost === 0 ? "text-green-600" : ""}>
                   {shippingCost === 0
                     ? "Free"
-                    : `#${formatCurrency(shippingCost)}`}
+                    : `${formatCurrency(shippingCost)}`}
                 </span>
               </div>
               <div className="flex justify-between font-bold text-gray-900 text-base border-t border-gray-100 pt-3">
