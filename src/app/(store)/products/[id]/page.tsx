@@ -41,7 +41,7 @@ export default async function ProductDetailPage({ params }: Props) {
     product.discountPercentage,
   );
   const hasDiscount = product.discountPercentage > 0;
-  const savings = Number((product.price - discountedPrice).toFixed(2));
+  const savings = parseFloat((product.price - discountedPrice).toFixed(2));
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -140,7 +140,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
           {hasDiscount && (
             <p className="text-sm text-green-600 font-medium mb-5">
-              You save {formatCurrency(parseFloat(savings))} (
+              You save {formatCurrency(savings)} (
               {Math.round(product.discountPercentage)}% off)
             </p>
           )}
